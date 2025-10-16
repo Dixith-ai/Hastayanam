@@ -33,7 +33,7 @@ powershell -ExecutionPolicy Bypass -File .\run.ps1
 - Ensure your webcam is connected and not used by other apps.
 - Start the app. A window opens with your camera feed and HUD.
 - Pinch (🤏) and hold for ~3s to cycle the global mode: System → Media → Browser. Watch the yellow progress bar.
-- Perform the gestures shown in the guide for the active mode. Only actions from the current mode are executed.
+- Perform gestures for the active mode only. Actions from other modes won’t run.
 - Press `q` to quit.
 
 ## Modes and Hand Roles
@@ -43,13 +43,8 @@ powershell -ExecutionPolicy Bypass -File .\run.ps1
 - Mirrored webcam? Toggle handedness in `hastayanam/config.py`: `VIDEO.swap_handedness = True`.
 
 ## Gesture Guide
-See the full, constantly updated guide:
-- `GESTURE_GUIDE.md` — how to perform gestures, actions per mode, HUD reference, and tuning tips.
-
-Common examples (active mode required):
-- System: Palm → Show Desktop; Point Up/Down → Volume Up/Down; Swipe Left/Right → Window switch; Fist (hold) → Sleep
-- Media: Two Fingers → Play/Pause; Swipe Left/Right → Previous/Next; Palm → Start/Resume; Thumbs Up/Down → Volume
-- Browser: Palm → New Tab; Fist → Close Tab; Swipe Left/Right → Tab switch; Palm (hold) → Private/Incognito
+For all gestures and their actions per mode, see the full guide:
+- `GESTURE_GUIDE.md`
 
 ## Configuration
 Tune thresholds and behavior in `hastayanam/config.py`:
