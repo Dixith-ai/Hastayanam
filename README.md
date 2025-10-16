@@ -13,7 +13,9 @@ Hastāyanam lets you control your PC using hand movements in real time. It suppo
 
 ## Quick Start (Windows)
 ```powershell
-cd A:\py_prj\hand_recognition_ver_5
+# Clone or download this repo
+# git clone https://github.com/Dixith-ai/Hastayanam.git
+cd Hastayanam
 ./run.ps1
 ```
 Alternatively:
@@ -55,9 +57,13 @@ Tune thresholds and behavior in `hastayanam/config.py`:
 - `THRESHOLDS.swipe_min_displacement_px` — swipe displacement
 - `VIDEO.swap_handedness` — flip Left/Right labels if mirrored
 
+## Tech Stack
+- Python, OpenCV, MediaPipe Hands, NumPy
+- Hotkeys via `pyautogui` (and system ops via Windows tools)
+
 ## Project Structure
 ```
-hastayanam/
+hand_recognition_ver_5/
   app.py                  # Entry point: camera loop, HUD, mode gating, action dispatch
   requirements.txt        # Python dependencies
   run.ps1 | run.bat       # Windows convenience scripts
