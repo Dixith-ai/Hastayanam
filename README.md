@@ -1,49 +1,69 @@
-# Hastāyanam – Gesture-Based Human–Computer Interaction System
+# Hastāyanam
 
-Hastāyanam is a real-time hand-gesture control system for Windows. It uses a webcam, MediaPipe Hands, and OpenCV to detect gestures and map them to desktop, media/presentation, and browser actions. It provides an on-screen HUD with the active mode, detected gesture, action performed, confidence, and FPS.
+Gesture-Based Human–Computer Interaction for Windows (Webcam + MediaPipe + OpenCV)
 
-## Features
+Hastāyanam lets you control your PC using hand gestures in real time. It supports a global mode switch (System, Media, Browser), left/right hand routing, clear on-screen HUD, and a detailed gesture guide.
+
+## Highlights
 - Real-time hand tracking with MediaPipe Hands
-- 10+ gestures: Open Palm, Fist, Thumbs Up, Thumbs Down, Two Fingers, Point Up, Point Down, Swipe Left, Swipe Right, Hold Palm/Fist, etc.
-- Three modes with dedicated actions:
-  - System Control
-  - Media Control (music, video players, and presentations)
-  - Browser Control
-- Gesture to switch modes (Pinch 🤏 hold)
-- On-screen overlay with gesture, action, mode, confidence, and FPS
+- 10+ gestures: Palm, Fist, Thumbs Up/Down, Two Fingers, Point Up/Down, Swipe Left/Right, Hold, Pinch
+- Global Mode switch with pinch (🤏) hold for ~3s: System → Media → Browser
+- Left/Right hand handling with optional handedness swap for mirrored webcams
+- On-screen HUD: mode, gestures per hand, last action, confidence, cooldown, FPS, mode-switch progress
+- Modular codebase; easy to extend actions and thresholds
 
-## Installation (Windows)
+## Quick Start (Windows)
 ```powershell
-# In PowerShell
 cd A:\py_prj\hand_recognition_ver_5
 ./run.ps1
 ```
-This script creates a virtual environment, installs dependencies, and launches the app.
-
-Manual steps if preferred:
+Alternatively:
 ```powershell
 python -m venv .venv
 . .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python app.py
 ```
+If PowerShell blocks scripts:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run.ps1
+```
 
-## Usage
-- Ensure a webcam is connected.
-- Run the app; a window with the camera feed and HUD will open.
-- Perform gestures to trigger actions. Use 🤏 (pinch) held ~3s to cycle through modes.
-- Press `q` in the window to quit, or use ✊ (Fist) depending on configuration.
+## How to Use
+- Ensure your webcam is connected and not used by other apps.
+- Start the app. A window opens with your camera feed and HUD.
+- Pinch (🤏) and hold for ~3s to cycle the global mode: System → Media → Browser. Watch the yellow progress bar.
+- Perform the gestures shown in the guide for the active mode. Only actions from the current mode are executed.
+- Press `q` to quit.
 
-## How It Works
-- MediaPipe Hands detects hand landmarks (21 points).
-- Landmarks are normalized and passed to a rule-based gesture classifier.
-- The classifier detects static poses (e.g., Palm, Fist, Thumbs) and temporal motions (Swipes, Holds).
-- A ModeManager tracks the active mode (System/Media/Browser).
-- An action mapper executes the OS/browser/media actions using pyautogui and Windows shortcuts.
-- The HUD renders the current mode, gesture, action, confidence, and FPS.
+## Modes and Hand Roles
+- Global Mode (pinch to switch): System ↔ Media ↔ Browser
+- Either hand can perform gestures; only current mode actions run.
+- The HUD shows each detected hand with a line like `Right: open_palm (0.95)` and `Left: swipe_right (0.92)`.
+- Mirrored webcam? Toggle handedness in `hastayanam/config.py`: `VIDEO.swap_handedness = True`.
 
-## Detailed Gesture Guide
-See `GESTURE_GUIDE.md` for full instructions.
+## Gesture Guide
+See the full, constantly updated guide:
+- `GESTURE_GUIDE.md` — how to perform gestures, actions per mode, HUD reference, and tuning tips.
+
+Common examples (active mode required):
+- System: Palm → Show Desktop; Point Up/Down → Volume Up/Down; Swipe Left/Right → Window switch; Fist (hold) → Sleep
+- Media: Two Fingers → Play/Pause; Swipe Left/Right → Previous/Next; Palm → Start/Resume; Thumbs Up/Down → Volume
+- Browser: Palm → New Tab; Fist → Close Tab; Swipe Left/Right → Tab switch; Palm (hold) → Private/Incognito
+
+## Configuration
+Tune thresholds and behavior in `hastayanam/config.py`:
+- `THRESHOLDS.confidence_min` — minimum confidence to trigger
+- `THRESHOLDS.stability_frames` — frames required for a stable pose
+- `THRESHOLDS.gesture_cooldown_s` — default cooldown between repeats
+- `THRESHOLDS.mode_switch_hold_s` — pinch hold time (default 3.0s)
+- `THRESHOLDS.pinch_distance_threshold` — pinch sensitivity
+- `THRESHOLDS.swipe_min_displacement_px` — swipe displacement
+- `VIDEO.swap_handedness` — flip Left/Right labels if mirrored
+
+## Tech Stack
+- Python, OpenCV, MediaPipe Hands, NumPy
+- Hotkeys via `pyautogui` (and system ops via Windows tools)
 
 ## Project Structure
 ```
@@ -51,8 +71,10 @@ hand_recognition_ver_5/
   app.py
   requirements.txt
   run.ps1
+  run.bat
   README.md
   GESTURE_GUIDE.md
+  LICENSE
   hastayanam/
     __init__.py
     config.py
@@ -66,11 +88,11 @@ hand_recognition_ver_5/
     actions_browser.py
 ```
 
-## Notes
-- Media mode targets common controls for music players, video (including web video), and presentations. Play/Pause uses the Space key; Next/Prev uses Left/Right arrows which most slide/video players support.
-- Some native music apps require dedicated media keys for Next/Prev Track; if your app ignores arrow keys, let us know which player so we can add enhanced support.
-- Sensitivity and thresholds can be tuned in `hastayanam/config.py`.
-- If volume control via pycaw is unavailable, the app falls back to keyboard volume keys.
+## Troubleshooting
+- Gestures fire too often: increase `confidence_min`, `stability_frames`, or cooldowns.
+- Swipes unreliable: raise `swipe_min_displacement_px`.
+- Labels reversed (Right/Left): set `VIDEO.swap_handedness = True`.
+- Some apps ignore hotkeys: run as Administrator or share the app name for tailored mappings.
 
 ## License
-MIT
+MIT — see `LICENSE`.
